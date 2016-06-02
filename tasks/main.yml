@@ -1,0 +1,26 @@
+---
+- name: start and enabled firewalld service
+  service: name=firewalld state=started enabled=yes
+
+- name: settings service
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    permanent: true
+    immediate: yes
+  with_items:
+    - http
+    - https
+    - postgresql
+  notify: restart firewalld
+
+- name: settings service mongodb
+  firewalld:
+    port: "27017/tcp"
+    state: enabled
+    permanent: true
+    immediate: yes
+  notify: restart firewalld
+
+# - name: stop firewalld service
+#   service: name=firewalld state=stopped
